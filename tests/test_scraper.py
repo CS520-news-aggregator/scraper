@@ -6,7 +6,9 @@ client = TestClient(app)
 
 
 def test_get_scrape():
-    response = client.get("/scraper/scrape_data")
-    assert response.status_code == 404
-    # TODO
-    # assert response.json() == {"message": "Observer subscribed"}
+    response = client.get("/scraper/get-scrape-data", params={"link": "badurl.bad"})
+    assert response.status_code == 400
+
+    response = client.get("/scraper/get-scrape-data", params={"link": "https://en.wikipedia.org/wiki/New_York_City"})
+    assert response.status_code == 200
+    assert "content" in response.json()
